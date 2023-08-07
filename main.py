@@ -10,17 +10,18 @@ pd.set_option('display.expand_frame_repr', False)
 data = pd.read_csv(file_path, encoding='utf-8', delimiter='\t')
 
 # вводим номер объекта
-desired_value = input("Номер объекта: ")
+#desired_value = input("Номер объекта: ")
+desired_value = '171'
 
 
 # выводим количество объектов по счёту
-data['Количество значений'] = data['Комментарий'].str.split(',').apply(len)
+data['Количество объектов'] = data['Комментарий'].str.split(',').apply(len)
 
 # убираем пробелы и символы '\xa0', заменяем запятые на точки в столбце "Всего"
 data['Всего'] = data['Всего'].str.replace(r'\s| ', '', regex=True).str.replace(',', '.', regex=False).astype(float)
 
 # создаем столбец "Среднее значение"
-data['Среднее значение'] = data['Всего'] / data['Количество значений']
+data['Среднее значение'] = data['Всего'] / data['Количество объектов']
 
 # округляем значения в столбце "Среднее значение" до 2 знаков после запятой
 data['Среднее значение'] = data['Среднее значение'].round(2)
@@ -34,7 +35,8 @@ filtered_data = data[data['Комментарий'].apply(lambda x: contains_des
 
 print(filtered_data)
 
-total_sum = data['Среднее значение'].sum()
+#суммируем значения
+total_sum = filtered_data['Среднее значение'].sum()
 
 # форматирование числа с разделением тысяч пробелами и двумя знаками после запятой
 total_sum = '{:,.2f}'.format(total_sum).replace(',', ' ')
